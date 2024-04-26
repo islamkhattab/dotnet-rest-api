@@ -37,7 +37,8 @@ public static class GameStoreEndpoints
     };
     public static RouteGroupBuilder RegisterGameStoreEndpoints(this WebApplication app)
     {
-        var group = app.MapGroup("games");
+        var group = app.MapGroup("games")
+                       .WithParameterValidation();
 
         // GET /games
         group.MapGet("/", () =>
@@ -45,7 +46,7 @@ public static class GameStoreEndpoints
             return Results.Ok(games);
         });
 
-        // GET /games
+        // GET /games/1
         group.MapGet("/{Id}", (int Id) =>
         {
             var game = games.Find(x => x.Id == Id);
@@ -53,6 +54,7 @@ public static class GameStoreEndpoints
             return game != null ? Results.Ok(game) : Results.NotFound();
         }).WithName(GetGameEndpointName);
 
+        // POST /games
         group.MapPost("/", (Game newGame) =>
         {
             newGame.Id = games.Max(game => game.Id) + 1;
@@ -62,6 +64,7 @@ public static class GameStoreEndpoints
             return Results.CreatedAtRoute(GetGameEndpointName, new { Id = newGame.Id }, newGame);
         });
 
+        // PUT /games/1
         group.MapPut("/{Id}", (int Id, Game updatedGame) =>
         {
             var existingGame = games.Find(x => x.Id == Id);
@@ -80,6 +83,8 @@ public static class GameStoreEndpoints
             return Results.NoContent();
         });
 
+
+        // DELETE /games
         group.MapDelete("/{Id}", (int Id) =>
         {
             games.RemoveAll(x => x.Id == Id);
