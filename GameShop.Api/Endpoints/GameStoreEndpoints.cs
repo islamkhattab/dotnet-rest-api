@@ -1,3 +1,4 @@
+using GameShop.Api.Dtos;
 using GameShop.Api.Entities;
 using GameShop.Api.Repositories;
 
@@ -15,7 +16,7 @@ public static class GameStoreEndpoints
         // GET /games
         group.MapGet("/", (IGamesRepository repository) =>
         {
-            return Results.Ok(repository.GetAll());
+            return Results.Ok(repository.GetAll().Select(game => game.AsDto()));
         });
 
         // GET /games/1
@@ -23,19 +24,28 @@ public static class GameStoreEndpoints
         {
             var game = repository.Get(id);
 
-            return game is not null ? Results.Ok(game) : Results.NotFound();
+            return game is not null ? Results.Ok(game.AsDto()) : Results.NotFound();
         }).WithName(GetGameEndpointName);
 
         // POST /games
-        group.MapPost("/", (Game newGame, IGamesRepository repository) =>
+        group.MapPost("/", (CreateGameDto gameDto, IGamesRepository repository) =>
         {
-            newGame = repository.Create(newGame);
+            Game game = new()
+            {
+                Name = gameDto.Name,
+                Price = gameDto.Price,
+                Genre = gameDto.Genre,
+                ReleaseDate = gameDto.ReleaseDate,
+                ImageUri = gameDto.ImageUri
+            };
 
-            return Results.CreatedAtRoute(GetGameEndpointName, new { Id = newGame.Id }, newGame);
+            game = repository.Create(game);
+
+            return Results.CreatedAtRoute(GetGameEndpointName, new { Id = game.Id }, gameDto);
         });
 
         // PUT /games/1
-        group.MapPut("/{id}", (int id, Game updatedGame, IGamesRepository repository) =>
+        group.MapPut("/{id}", (int id, UpdateGameDto updatedGameDto, IGamesRepository repository) =>
         {
             var existingGame = repository.Get(id);
 
@@ -44,7 +54,15 @@ public static class GameStoreEndpoints
                 return Results.NotFound();
             }
 
-            repository.Update(updatedGame);
+
+
+            existingGame.Name = updatedGameDto.Name;
+            existingGame.Price = updatedGameDto.Price;
+            existingGame.Genre = updatedGameDto.Genre;
+            existingGame.ReleaseDate = updatedGameDto.ReleaseDate;
+            existingGame.ImageUri = updatedGameDto.ImageUri;
+
+            repository.Update(existingGame);
 
             return Results.NoContent();
         });
