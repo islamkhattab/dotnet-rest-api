@@ -1,0 +1,32 @@
+GET http://localhost:5291/games
+
+###
+GET http://localhost:5291/games/4
+
+###
+POST http://localhost:5291/games
+Content-Type: application/json
+
+{
+    "Name" : "Street Fighter II",
+    "Genre" : "Fighting",
+    "ReleaseDate" : "1991-02-01",
+    "Price" : 19.99,
+    "ImageUri" : "https://placehold.co/100"
+}
+
+###
+PUT http://localhost:5291/games
+Content-Type: application/json
+
+{
+    "Id": 4,
+    "Name" : "Street Fighter III",
+    "Genre" : "Fighting",
+    "ReleaseDate" : "1991-02-01",
+    "Price" : 19.99,
+    "ImageUri" : "https://placehold.co/100"
+}
+
+###
+DELETE http://localhost:5291/games/4
