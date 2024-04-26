@@ -62,16 +62,20 @@ public static class GameStoreEndpoints
             return Results.CreatedAtRoute(GetGameEndpointName, new { Id = newGame.Id }, newGame);
         });
 
-        group.MapPut("/", (Game game) =>
+        group.MapPut("/{Id}", (int Id, Game updatedGame) =>
         {
-            int index = games.FindIndex(x => x.Id == game.Id);
+            var existingGame = games.Find(x => x.Id == Id);
 
-            if (index < 0)
+            if (existingGame is null)
             {
                 return Results.NotFound();
             }
 
-            games[index] = game;
+            existingGame.Name = updatedGame.Name;
+            existingGame.Genre = updatedGame.Genre;
+            existingGame.Price = updatedGame.Price;
+            existingGame.ReleaseDate = updatedGame.ReleaseDate;
+            existingGame.ImageUri = updatedGame.ImageUri;
 
             return Results.NoContent();
         });
