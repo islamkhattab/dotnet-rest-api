@@ -4,7 +4,7 @@
 
 ```bash
 
-SQL_PASSWORD=YOUR_PASSWORD
+SQL_PASSWORD=P@ssw0rd123
 
 sudo docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=$SQL_PASSWORD" -p 1433:1433 \
         -v gameshop-sqlvolume:/var/opt/mssql \
