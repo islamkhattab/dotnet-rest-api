@@ -6,26 +6,26 @@ namespace GameShop.Api.Repositories;
 
 public class EFGamesRepository(GameShopContext dbContext) : IGamesRepository
 {
-    public IEnumerable<Game> GetAll() => dbContext.Games.AsNoTracking().ToList();
+    public async Task<IEnumerable<Game>> GetAllAsync() => await dbContext.Games.AsNoTracking().ToListAsync();
 
-    public Game? Get(int id) => dbContext.Games.Find(id);
+    public async Task<Game?> GetAsync(int id) => await dbContext.Games.FindAsync(id);
 
-    public Game Create(Game game)
+    public async Task<Game> CreateAsync(Game game)
     {
         dbContext.Games.Add(game);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return game;
     }
 
-    public void Update(Game game)
+    public async Task UpdateAsync(Game game)
     {
         dbContext.Update(game);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async Task DeleteAsync(int id)
     {
-        dbContext.Games.Where(game => game.Id == id)
-                       .ExecuteDelete();
+        await dbContext.Games.Where(game => game.Id == id)
+                             .ExecuteDeleteAsync();
     }
 }
