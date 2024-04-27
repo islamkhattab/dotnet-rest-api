@@ -24,3 +24,9 @@ dotnet user-secrets set "ConnectionStrings:GameShopDB" "Server=localhost; Databa
 
 dotnet user-secrets list
 ```
+
+## EF Migration tool
+
+```bash
+dotnet ef migrations add "MIGRATION_NAME" --output-dir "Data/Migrations"
+```
