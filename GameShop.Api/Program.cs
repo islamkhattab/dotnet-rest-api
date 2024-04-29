@@ -5,39 +5,63 @@ using GameShop.Api.Endpoints;
 //IF WE WANT TO USE CUSTOM ERROR HANDLER
 //using GameShop.Api.ErrorHandling;
 using GameShop.Api.Middleware;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+var configuration = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile("appsettings.json")
+        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+        .Build();
 
-builder.Services.AddRepositories(builder.Configuration);
-builder.Services.AddAuthentication().AddJwtBearer();
-builder.Services.AddGameShopAuthorization();
-builder.Services.AddHttpLogging(options => { });
-builder.Services.AddProblemDetails(options =>
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(configuration)
+    .CreateLogger();
+
+try
 {
-    options.CustomizeProblemDetails = ctx =>
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddSerilog();
+    builder.Services.AddRepositories(builder.Configuration);
+    builder.Services.AddAuthentication().AddJwtBearer();
+    builder.Services.AddGameShopAuthorization();
+    builder.Services.AddHttpLogging(options => { });
+    builder.Services.AddProblemDetails(options =>
     {
-        ctx.ProblemDetails.Extensions.Add("Host", Environment.MachineName);
-        ctx.ProblemDetails.Extensions.Add("TraceId", Activity.Current?.TraceId.ToString());
-    };
-});
+        options.CustomizeProblemDetails = ctx =>
+        {
+            ctx.ProblemDetails.Extensions.Add("Host", Environment.MachineName);
+            ctx.ProblemDetails.Extensions.Add("TraceId", Activity.Current?.TraceId.ToString());
+        };
+    });
 
-var app = builder.Build();
+    var app = builder.Build();
 
-//IF WE WANT TO USE CUSTOM ERROR HANDLER
-//app.UseExceptionHandler( app => app.ConfigureExceptionHandler());
+    //IF WE WANT TO USE CUSTOM ERROR HANDLER
+    //app.UseExceptionHandler( app => app.ConfigureExceptionHandler());
 
-app.UseMiddleware<RequestTimingMiddleware>();
+    app.UseMiddleware<RequestTimingMiddleware>();
 
-await app.Services.IntializeDbAsync();
+    await app.Services.IntializeDbAsync();
 
-app.RegisterGameStoreEndpoints();
+    app.RegisterGameStoreEndpoints();
 
-app.UseHttpLogging();
+    app.UseHttpLogging();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler();
-    app.UseHsts();
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseExceptionHandler();
+        app.UseHsts();
+    }
+
+    app.Run();
+
 }
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
