@@ -30,3 +30,11 @@ dotnet user-secrets list
 ```bash
 dotnet ef migrations add "MIGRATION_NAME" --output-dir "Data/Migrations"
 ```
+
+### Create Jwt Tokens
+```bash
+dotnet user-jwts create
+dotnet user-jwts create --role "Admin"
+dotnet user-jwts create --role "Admin" --scope "games:read"
+dotnet user-jwts create --role "Admin" --scope "games:read" --scope "games:write"
+```

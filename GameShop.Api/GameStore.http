@@ -1,11 +1,29 @@
-GET http://localhost:5291/games
+@ENDPOINT=http://localhost:5291
+
+# User Access Token
+#@ACCESS_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImlzbGFta2hhdHRhYiIsInN1YiI6ImlzbGFta2hhdHRhYiIsImp0aSI6IjY0OTAwMWY5IiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NDgwODYiLCJodHRwczovL2xvY2FsaG9zdDo0NDMxOSIsImh0dHA6Ly9sb2NhbGhvc3Q6NTI5MSIsImh0dHBzOi8vbG9jYWxob3N0OjcyNjYiXSwibmJmIjoxNzE0MTg1ODA4LCJleHAiOjE3MjIwNDgyMDgsImlhdCI6MTcxNDE4NTgwOSwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.9NrLs8HyS1yfAm7z8Q1WpyY4SkyIgRIHpjAJC1KNBHo
+
+# Admin User Access Token
+#@ACCESS_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImlzbGFta2hhdHRhYiIsInN1YiI6ImlzbGFta2hhdHRhYiIsImp0aSI6IjRmNjY0ZjhmIiwicm9sZSI6IkFkbWluIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NDgwODYiLCJodHRwczovL2xvY2FsaG9zdDo0NDMxOSIsImh0dHA6Ly9sb2NhbGhvc3Q6NTI5MSIsImh0dHBzOi8vbG9jYWxob3N0OjcyNjYiXSwibmJmIjoxNzE0NDA0OTU4LCJleHAiOjE3MjIyNjczNTgsImlhdCI6MTcxNDQwNDk1OCwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.mHHkdj_7j-ATNY1-PfOpsxlENYnV-3nKvfSZsL74v-k
+
+# Admin with Read User Access Token
+@ACCESS_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImlzbGFta2hhdHRhYiIsInN1YiI6ImlzbGFta2hhdHRhYiIsImp0aSI6IjM5YTlkMzY2Iiwic2NvcGUiOiJnYW1lczpyZWFkIiwicm9sZSI6IkFkbWluIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6NDgwODYiLCJodHRwczovL2xvY2FsaG9zdDo0NDMxOSIsImh0dHA6Ly9sb2NhbGhvc3Q6NTI5MSIsImh0dHBzOi8vbG9jYWxob3N0OjcyNjYiXSwibmJmIjoxNzE0NDA1NDA3LCJleHAiOjE3MjIyNjc4MDcsImlhdCI6MTcxNDQwNTQwOCwiaXNzIjoiZG90bmV0LXVzZXItand0cyJ9.4fpoC62iR7sjg8Eaq70k5UZsenovwb87pVyOAfKVwro
+
+# Admin with Read/Write User Access Token
+#@ACCESS_JWT=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImlzbGFta2hhdHRhYiIsInN1YiI6ImlzbGFta2hhdHRhYiIsImp0aSI6IjczNWYyYzIzIiwic2NvcGUiOlsiZ2FtZXM6cmVhZCIsImdhbWVzOndyaXRlIl0sInJvbGUiOiJBZG1pbiIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0OjQ4MDg2IiwiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMTkiLCJodHRwOi8vbG9jYWxob3N0OjUyOTEiLCJodHRwczovL2xvY2FsaG9zdDo3MjY2Il0sIm5iZiI6MTcxNDQwNTc0MiwiZXhwIjoxNzIyMjY4MTQyLCJpYXQiOjE3MTQ0MDU3NDMsImlzcyI6ImRvdG5ldC11c2VyLWp3dHMifQ.78AML_agx7t8ZpuqZl03acxDqMQY9Bg7J2aQtiCtXFY
+
 
 ###
-GET http://localhost:5291/games/4
+GET {{ENDPOINT}}/games
 
 ###
-POST http://localhost:5291/games
+GET {{ENDPOINT}}/games/10
+Authorization: Bearer {{ACCESS_JWT}}
+
+###
+POST {{ENDPOINT}}/games
 Content-Type: application/json
+Authorization: Bearer {{ACCESS_JWT}}
 
 {
     "name" : "Street Fighter II",
@@ -16,8 +34,9 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:5291/games/4
+PUT {{ENDPOINT}}/games/9
 Content-Type: application/json
+Authorization: Bearer {{ACCESS_JWT}}
 
 {
     "name" : "Street Fighter II",
@@ -28,4 +47,5 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5291/games/1
+DELETE {{ENDPOINT}}/games/9
+Authorization: Bearer {{ACCESS_JWT}}
