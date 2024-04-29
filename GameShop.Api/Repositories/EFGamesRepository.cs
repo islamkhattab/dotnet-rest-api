@@ -9,7 +9,7 @@ public class EFGamesRepository(GameShopContext dbContext, ILogger<EFGamesReposit
     public async Task<IEnumerable<Game>> GetAllAsync() => await dbContext.Games.AsNoTracking().ToListAsync();
 
     public async Task<Game?> GetAsync(int id) => await dbContext.Games.FindAsync(id);
-
+    
     public async Task<Game> CreateAsync(Game game)
     {
         dbContext.Games.Add(game);
