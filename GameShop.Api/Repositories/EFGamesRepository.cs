@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameShop.Api.Repositories;
 
-public class EFGamesRepository(GameShopContext dbContext) : IGamesRepository
+public class EFGamesRepository(GameShopContext dbContext, ILogger<EFGamesRepository> logger) : IGamesRepository
 {
     public async Task<IEnumerable<Game>> GetAllAsync() => await dbContext.Games.AsNoTracking().ToListAsync();
 
@@ -14,6 +14,9 @@ public class EFGamesRepository(GameShopContext dbContext) : IGamesRepository
     {
         dbContext.Games.Add(game);
         await dbContext.SaveChangesAsync();
+
+        logger.LogInformation("Create game '{Name}' with price: {Price} and id: {Id}", game.Name, game.Price, game.Id);
+
         return game;
     }
 
